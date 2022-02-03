@@ -1,103 +1,96 @@
-const inquirer = require('inquirer');
-const chalk = require('chalk');
+module.exports = class normalCalculator {
+  constructor(inquirer, chalk) {
+    this.inquirer = require(inquirer);
+    this.chalk = require(chalk);
+  }
+  getOption() {
+    this.inquirer
+      .prompt([
+        {
+          type: 'list',
+          name: 'option',
+          message: 'Qual das operações abaixo você deseja realizar?',
+          choices: [
+            'Soma',
+            'Subtração',
+            'Multiplicação',
+            'Divisão',
+            'Potenciação',
+            'Raiz Quadrada',
+          ],
+        },
+      ])
+      .then(async (answer) => {
+        const operation = answer['option'];
+        const values = await this.operations(operation);
+        console.log(this.inquirer);
 
-function normalCalculator(returnFunction) {
-  inquirer
-    .prompt([
-      {
-        type: 'list',
-        name: 'option',
-        message: 'Qual das operações abaixo você deseja realizar?',
-        choices: [
-          'Soma',
-          'Subtração',
-          'Multiplicação',
-          'Divisão',
-          'Potenciação',
-          'Raiz Quadrada',
-          'Voltar',
-        ],
-      },
-    ])
-    .then(async (answer) => {
-      const operation = answer['option'];
-      const values = await operations(operation);
-
-      switch (operation) {
-        case 'Soma':
+        if (operation === 'Soma') {
           console.log(
-            chalk.bgGreen.black(
+            this.chalk.bgGreen.black(
               ` A soma deu como resultado ${+values[0] + +values[1]} \n\n`,
             ),
           );
-          return normalCalculator();
-          break;
-        case 'Subtração':
+          return this.getOption();
+        } else if (operation === 'Subtração') {
           console.log(
-            chalk.bgGreen.black(
+            this.chalk.bgGreen.black(
               ` A subtração deu como resultado ${values[0] - values[1]} \n\n`,
             ),
           );
-          return normalCalculator();
-          break;
-        case 'Multiplicação':
+          return this.getOption();
+        } else if (operation === 'Multiplicação') {
           console.log(
-            chalk.bgGreen.black(
+            this.chalk.bgGreen.black(
               ` A multiplicação deu como resultado ${
                 values[0] * values[1]
               } \n\n`,
             ),
           );
-          return normalCalculator();
-          break;
-        case 'Divisão':
+          return this.getOption();
+        } else if (operation === 'Divisão') {
           console.log(
-            chalk.bgGreen.black(
+            this.chalk.bgGreen.black(
               ` A divisão deu como resultado ${values[0] / values[1]} \n\n`,
             ),
           );
-          return normalCalculator();
-          break;
-        case 'Potenciação':
+          return this.getOption();
+        } else if (operation === 'Potenciação') {
           console.log(
-            chalk.bgGreen.black(
+            this.chalk.bgGreen.black(
               ` A potenciação deu como resultado ${
                 values[0] ** values[1]
               } \n\n`,
             ),
           );
-          return normalCalculator();
-          break;
-        case 'Raiz Quadrada':
+          return this.getOption();
+        } else if (operation === 'Raiz Quadrada') {
           console.log(
-            chalk.bgGreen.black(
+            this.chalk.bgGreen.black(
               ` A radiciação deu como resultado ${Math.sqrt(values[0])} \n\n`,
             ),
           );
-          return normalCalculator();
+          return this.getOption();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
-          break;
-        default:
-          return returnFunction();
-          break;
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-
-  async function operations(operation) {
+  async operations(operation) {
     const values = [];
 
+    // Textos
     if (operation === 'Raiz Quadrada') {
       console.log(
-        chalk.yellowBright(
+        this.chalk.yellowBright(
           `\nCerto! Iremos realizar a ${operation.toLowerCase()}, só nos informe o valor da radiciação\n`,
         ),
       );
     } else {
       console.log(
-        chalk.yellowBright(
+        this.chalk.yellowBright(
           `\nCerto! Iremos realizar a ${operation.toLowerCase()}, só nos informe os valores abaixo:`,
         ),
       );
@@ -105,7 +98,7 @@ function normalCalculator(returnFunction) {
 
     // Operações
     if (operation === 'Potenciação') {
-      await inquirer
+      await this.inquirer
         .prompt([
           {
             name: 'base',
@@ -116,7 +109,7 @@ function normalCalculator(returnFunction) {
           values.push(Number.parseFloat(answer['base'].replace(',', '.')));
         });
 
-      await inquirer
+      await this.inquirer
         .prompt([
           {
             name: 'exponent',
@@ -127,7 +120,7 @@ function normalCalculator(returnFunction) {
           values.push(Number.parseFloat(answer['exponent'].replace(',', '.')));
         });
     } else if (operation === 'Raiz Quadrada') {
-      await inquirer
+      await this.inquirer
         .prompt([
           {
             name: 'squareRoot',
@@ -139,10 +132,8 @@ function normalCalculator(returnFunction) {
             Number.parseFloat(answer['squareRoot'].replace(',', '.')),
           );
         });
-    } else if ('Voltar') {
-      return true;
     } else {
-      await inquirer
+      await this.inquirer
         .prompt([
           {
             name: 'firstValue',
@@ -168,9 +159,6 @@ function normalCalculator(returnFunction) {
           );
         });
     }
-
     return values;
   }
-}
-
-normalCalculator();
+};
