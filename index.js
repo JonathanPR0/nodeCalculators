@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const chalk = require('chalk');
 const normalCalculator = require('./functions/normalCalculator');
+const imc = require('./functions/imc');
 
 function start() {
   inquirer
@@ -11,15 +12,22 @@ function start() {
         message: `${chalk.blue(
           'Seja bem vindo(a)!',
         )} Qual dessas funções você deseja usar?`,
-        choices: ['Calculadora normal', 'Cancelar'],
+        choices: [
+          'Calculadora normal',
+          'Calculadora de IMC',
+          chalk.red('Cancelar'),
+        ],
       },
     ])
     .then((answer) => {
       const operation = answer['option'];
-      const normal = new normalCalculator('inquirer', 'chalk');
 
       if (operation === 'Calculadora normal') {
-        normal.getOption();
+        normalCalculator(start);
+      } else if (operation === 'Calculadora de IMC') {
+        imc(start);
+      } else {
+        return null;
       }
     })
     .catch((err) => {
